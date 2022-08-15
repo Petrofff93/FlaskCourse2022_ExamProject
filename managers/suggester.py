@@ -11,6 +11,3 @@ class SuggesterManager:
         user = SuggesterModel(**suggester_data)
         db.session.add(user)
         db.session.commit()
-
-
-

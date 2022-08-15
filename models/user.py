@@ -15,14 +15,15 @@ class BaseUserModel(db.Model):
 
 
 class AdministratorModel(BaseUserModel):
-    __tablename__ = 'administrator'
+    __tablename__ = "administrator"
 
     role = db.Column(db.Enum(UserType), default=UserType.admin, nullable=False)
 
 
 class SuggesterModel(BaseUserModel):
-    __tablename__ = 'suggester'
+    __tablename__ = "suggester"
 
-    suggestions = db.relationship("SuggestionModel", backref="suggestion", lazy="dynamic")
+    suggestions = db.relationship(
+        "SuggestionModel", backref="suggestion", lazy="dynamic"
+    )
     role = db.Column(db.Enum(UserType), default=UserType.base_user, nullable=False)
-

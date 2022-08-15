@@ -10,5 +10,3 @@ class RegisterResource(Resource):
         data = request.get_json()
         SuggesterManager.register(data)
         return 201
-
-
