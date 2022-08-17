@@ -6,10 +6,10 @@ class BaseUserModel(db.Model):
     __abstract__ = True
 
     # Using 'PK' instead of 'ID' in order to avoid name shadowing
-    pk = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(30), nullable=False)
     last_name = db.Column(db.String(30), nullable=False)
-    email = db.Column(db.String(80), nullable=False)
+    email = db.Column(db.String(80), nullable=False, unique=True)
     password = db.Column(db.String(255), nullable=False)
     phone_number = db.Column(db.String(20), nullable=False)
 

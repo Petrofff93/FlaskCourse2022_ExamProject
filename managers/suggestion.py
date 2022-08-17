@@ -1,4 +1,5 @@
 from db import db
+from models import SuggesterModel
 
 from models.suggestion import SuggestionModel
 
@@ -6,7 +7,7 @@ from models.suggestion import SuggestionModel
 class SuggestionManager:
     @staticmethod
     def get_all_user_suggestions(user):
-        if isinstance(user, SuggestionModel):
+        if isinstance(user, SuggesterModel):
             return SuggestionModel.query.filter_by(suggester_pk=user.pk).all()
         return SuggestionModel.query.all()
 

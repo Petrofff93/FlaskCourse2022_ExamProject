@@ -1,6 +1,7 @@
 from functools import wraps
+
 from flask import request
-from werkzeug.exceptions import BadRequest, Forbidden
+from werkzeug.exceptions import BadRequest
 
 
 def validate_schema(schema_name):

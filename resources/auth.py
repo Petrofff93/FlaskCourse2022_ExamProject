@@ -1,6 +1,6 @@
 from flask import request
 from flask_restful import Resource
-
+from flask_api import status
 
 from managers.user import SuggesterManager
 from schemas.request.user import RequestRegisterUserSchema, RequestLoginUserSchema
@@ -12,7 +12,7 @@ class RegisterSuggesterResource(Resource):
     def post(self):
         data = request.get_json()
         token = SuggesterManager.register(data)
-        return {"token": token}, 201
+        return {"token": token}, status.HTTP_201_CREATED
 
 
 class LoginSuggesterResource(Resource):
@@ -21,4 +21,3 @@ class LoginSuggesterResource(Resource):
         data = request.get_json()
         token = SuggesterManager.login(data)
         return {"token": token, "role": "suggester"}
-
