@@ -1,6 +1,6 @@
 from flask import request
-from flask_restful import Resource
 from flask_api import status
+from flask_restful import Resource
 
 from managers.user import SuggesterManager
 from schemas.request.user import RequestRegisterUserSchema, RequestLoginUserSchema
