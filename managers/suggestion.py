@@ -1,5 +1,5 @@
 from db import db
-from models import SuggesterModel
+from models import SuggesterModel, State
 
 from models.suggestion import SuggestionModel
 
@@ -18,3 +18,11 @@ class SuggestionManager:
         db.session.add(sugg)
         db.session.flush()
         return sugg
+
+    @staticmethod
+    def upload_suggestion(id_):
+        SuggestionModel.query.filter_by(id=id_).update({"status": State.accepted})
+
+    @staticmethod
+    def reject_upload(id_):
+        SuggestionModel.query.filter_by(id=id_).update({"status": State.rejected})
