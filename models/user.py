@@ -24,6 +24,6 @@ class SuggesterModel(BaseUserModel):
     __tablename__ = "suggester"
 
     suggestions = db.relationship(
-        "SuggestionModel", backref="suggestion", lazy="dynamic"
+        "SuggestionModel", backref="suggestion", lazy="dynamic", overlaps="suggester"
     )
     role = db.Column(db.Enum(UserType), default=UserType.base_user, nullable=False)

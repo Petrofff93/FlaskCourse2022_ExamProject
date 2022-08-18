@@ -12,6 +12,7 @@ class SuggesterManager:
         suggester_data["password"] = generate_password_hash(
             suggester_data["password"], method="sha256"
         )
+
         suggester = SuggesterModel(**suggester_data)
         try:
             db.session.add(suggester)

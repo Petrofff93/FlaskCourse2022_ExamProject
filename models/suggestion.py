@@ -15,6 +15,7 @@ class SuggestionModel(db.Model):
     importance_rate = db.Column(db.Integer, nullable=False)
     created_on = db.Column(db.DateTime, server_default=func.now())
     status = db.Column(db.Enum(State), default=State.pending, nullable=False)
+    course_certificate_url = db.Column(db.String(255), nullable=False)
 
     suggester_id = db.Column(db.Integer, db.ForeignKey("suggester.id"), nullable=False)
     suggester = db.relationship("SuggesterModel")

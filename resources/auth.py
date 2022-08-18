@@ -20,4 +20,4 @@ class LoginSuggesterResource(Resource):
     def post(self):
         data = request.get_json()
         token = SuggesterManager.login(data)
-        return {"token": token, "role": "suggester"}
+        return {"token": token, "role": "suggester"}, status.HTTP_200_OK
