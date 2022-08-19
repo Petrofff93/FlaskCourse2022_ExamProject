@@ -21,11 +21,11 @@ class SuggesterManager:
             raise BadRequest(str(error))
 
     @staticmethod
-    def login(data):
-        suggester = SuggesterModel.query.filter_by(email=data["email"]).first()
+    def login(signin_data):
+        suggester = SuggesterModel.query.filter_by(email=signin_data["email"]).first()
         if not suggester:
             raise BadRequest("There is no such email! Please Signup")
 
-        if check_password_hash(suggester.password, data["password"]):
+        if check_password_hash(suggester.password, signin_data["password"]):
             return AuthManager.encode_token(suggester)
         raise BadRequest("Credentials are not valid!")

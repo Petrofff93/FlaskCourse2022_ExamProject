@@ -35,3 +35,10 @@ def validate_email_already_exists(email):
     current_mail_admin = AdministratorModel.query.filter_by(email=email).first()
     if current_mail_suggester or current_mail_admin:
         raise ValidationError("Email already exists!")
+
+
+def validate_phone_number_already_exists(phone_number):
+    current_phone_number_suggester = SuggesterModel.query.filter_by(phone_number=phone_number).first()
+    current_phone_number_admin = AdministratorModel.query.filter_by(phone_number=phone_number).first()
+    if current_phone_number_admin or current_phone_number_suggester:
+        raise ValidationError("User with that phone number already exists!")

@@ -14,7 +14,7 @@ class AuthManager:
             "exp": datetime.utcnow() + timedelta(days=4),
             "type": type(user).__name__,
         }
-        return jwt.encode(payload, key=config("SECRET_KEY"), algorithm="HS256")
+        return jwt.encode(payload, key=config("JWT_SECRET_KEY"), algorithm="HS256")
 
     @staticmethod
     def decode_token(token):
@@ -35,5 +35,5 @@ def verify_token(token):
     try:
         user_id, user_type = AuthManager.decode_token(token)
         return eval(f"{user_type}.query.filter_by(id={user_id}).first()")
-    except Exception as error:
+    except Exception:
         raise Unauthorized("Token is invalid or missing!")

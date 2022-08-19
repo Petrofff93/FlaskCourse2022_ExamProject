@@ -11,7 +11,7 @@ class BaseUserModel(db.Model):
     last_name = db.Column(db.String(30), nullable=False)
     email = db.Column(db.String(80), nullable=False, unique=True)
     password = db.Column(db.String(255), nullable=False)
-    phone_number = db.Column(db.String(20), nullable=False)
+    phone_number = db.Column(db.String(20), nullable=False, unique=True)
 
 
 class AdministratorModel(BaseUserModel):

@@ -1,6 +1,7 @@
 from marshmallow import Schema, fields, validate
 
-from utils.custom_validations import validate_password, validate_email_already_exists, validate_phone_number
+from utils.custom_validations import validate_password, validate_email_already_exists, validate_phone_number, \
+    validate_phone_number_already_exists
 
 
 class BaseUserSchema(Schema):
@@ -11,8 +12,8 @@ class BaseUserSchema(Schema):
 class RequestRegisterUserSchema(BaseUserSchema):
     first_name = fields.Str(required=True, validate=validate.Length(min=2, max=30))
     last_name = fields.Str(required=True, validate=validate.Length(min=2, max=30))
-    phone_number = fields.Str(required=True, validate=validate.And(validate_phone_number))
+    phone_number = fields.Str(required=True, validate=validate.And(validate_phone_number, validate_phone_number_already_exists))
 
 
 class RequestLoginUserSchema(BaseUserSchema):
-    pass
+    email = fields.Email(required=True)
