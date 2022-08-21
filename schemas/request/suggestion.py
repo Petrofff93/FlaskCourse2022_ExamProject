@@ -1,5 +1,9 @@
+from marshmallow import fields
+
 from schemas.base_suggestion import BaseSuggestionSchema
 
 
 class RequestSuggestionSchema(BaseSuggestionSchema):
-    pass
+    certificate = fields.Str(required=True)
+    certificate_extension = fields.Str(required=True)
+

@@ -15,12 +15,14 @@ policy = PasswordPolicy.from_names(
 )
 
 
+# Custom validation for the password using external library 'password_strength'
 def validate_password(password):
     errors = policy.test(password)
     if errors:
         raise ValidationError("Password does not meet requirements!")
 
 
+# Custom validation for the phone number using external library 'phonenumbers'
 def validate_phone_number(phone_number):
     number = f"{phone_number}"
     try:
@@ -30,6 +32,7 @@ def validate_phone_number(phone_number):
         raise ValidationError("Please enter a valid phone number!")
 
 
+# Custom validation for already existing email
 def validate_email_already_exists(email):
     current_mail_suggester = SuggesterModel.query.filter_by(email=email).first()
     current_mail_admin = AdministratorModel.query.filter_by(email=email).first()
@@ -37,6 +40,7 @@ def validate_email_already_exists(email):
         raise ValidationError("Email already exists!")
 
 
+# Custom validation for already used phone numbers(you should not use one number for more than one reg)
 def validate_phone_number_already_exists(phone_number):
     current_phone_number_suggester = SuggesterModel.query.filter_by(phone_number=phone_number).first()
     current_phone_number_admin = AdministratorModel.query.filter_by(phone_number=phone_number).first()

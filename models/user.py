@@ -5,7 +5,6 @@ from models.enums import UserType
 class BaseUserModel(db.Model):
     __abstract__ = True
 
-    # Using 'PK' instead of 'ID' in order to avoid name shadowing
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(30), nullable=False)
     last_name = db.Column(db.String(30), nullable=False)

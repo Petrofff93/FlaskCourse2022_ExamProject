@@ -6,6 +6,7 @@ from werkzeug.exceptions import BadRequest, Forbidden
 from managers.auth import authentication
 
 
+# A decorator which helps us avoid DRY, and it can be used as an abstraction for every schema.
 def validate_schema(schema_name):
     def decorator(func):
         @wraps(func)
@@ -15,10 +16,13 @@ def validate_schema(schema_name):
             if errors:
                 raise BadRequest(f"Invalid fields {errors}")
             return func(*args, **kwargs)
+
         return decorated_function
+
     return decorator
 
 
+# A decorator which helps us determine the needed role.
 def permission_required(role):
     def decorated_function(func):
         def wrapper(*args, **kwargs):
@@ -26,5 +30,7 @@ def permission_required(role):
             if not current_user.role == role:
                 raise Forbidden("Permission denied!")
             return func(*args, **kwargs)
+
         return wrapper
+
     return decorated_function

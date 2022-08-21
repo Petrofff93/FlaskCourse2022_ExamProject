@@ -21,6 +21,7 @@ class SuggesterManager:
             db.session.add(suggester)
             return AuthManager.encode_token(suggester)
         except Exception as error:
+            # raises a Bad request and as a text uses the exception made as string
             raise BadRequest(str(error))
 
     @staticmethod
