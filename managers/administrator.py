@@ -6,6 +6,9 @@ from models import AdministratorModel
 
 
 class AdminManager:
+    """
+    Manager which takes care that only the admins could log into the admin panel.
+    """
     @staticmethod
     def login(login_data):
         admin = AdministratorModel.query.filter_by(email=login_data["email"]).first()

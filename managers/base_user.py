@@ -7,6 +7,9 @@ from models import SuggesterModel
 
 
 class SuggesterManager:
+    """
+    A class manager which takes care for registration and login of the base users(suggesters)
+    """
     @staticmethod
     def register(suggester_data):
         suggester_data["password"] = generate_password_hash(

@@ -5,8 +5,13 @@ from decouple import config
 from flask_httpauth import HTTPTokenAuth
 from werkzeug.exceptions import Unauthorized
 
+from models import SuggesterModel, AdministratorModel
+
 
 class AuthManager:
+    """
+    Authentication manager which is responsible to encode/decode and validate tokens
+    """
     @staticmethod
     def encode_token(user):
         payload = {
@@ -19,10 +24,10 @@ class AuthManager:
     @staticmethod
     def decode_token(token):
         try:
-            info_data = jwt.decode(
-                jwt=token, key=config("SECRET_KEY"), algorithms=["HS256"]
+            payload = jwt.decode(
+                token, key=config("JWT_SECRET_KEY"), algorithms=["HS256"]
             )
-            return info_data["sub"], info_data["type"]
+            return payload["sub"], payload["type"]
         except Exception as error:
             raise error
 
@@ -32,8 +37,14 @@ authentication = HTTPTokenAuth(scheme="Bearer")
 
 @authentication.verify_token
 def verify_token(token):
+    """
+    a verification func which takes care to verify if the user is regular or admin or does not exist
+    """
     try:
-        user_id, user_type = AuthManager.decode_token(token)
-        return eval(f"{user_type}.query.filter_by(id={user_id}).first()")
+        user_id = AuthManager.decode_token(token)
+        if user_id[1] == 'SuggesterModel':
+            return SuggesterModel.query.filter_by(id=user_id[0]).first()
+        if user_id[1] == 'AdministratorModel':
+            return AdministratorModel.query.filter_by(id=user_id[0]).first()
     except Exception:
         raise Unauthorized("Token is invalid or missing!")

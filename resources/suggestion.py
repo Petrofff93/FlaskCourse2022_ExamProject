@@ -12,7 +12,6 @@ from utils.decorators import validate_schema, permission_required
 
 class SuggestionListCreateResource(Resource):
     @authentication.login_required
-    @validate_schema(RequestSuggestionSchema)
     def get(self):
         user = authentication.current_user()
         suggestions = SuggestionManager.get_all_user_suggestions(user)
@@ -28,17 +27,23 @@ class SuggestionListCreateResource(Resource):
         return SuggestionResponseSchema().dump(suggestion)
 
 
-class UploadSuggestion(Resource):
+class SuggestionListGetAllResource(Resource):
+    def get(self):
+        suggestions = SuggestionManager.get_all_suggestions()
+        return SuggestionResponseSchema().dump(suggestions, many=True)
+
+
+class UploadSuggestionResource(Resource):
     @authentication.login_required
     @permission_required(UserType.admin)
-    def put(self, id_):
-        SuggestionManager.upload_suggestion(id_)
-        return status.HTTP_200_OK
+    def put(self, id):
+        SuggestionManager.upload_suggestion(id)
+        return status.HTTP_204_NO_CONTENT
 
 
-class RejectSuggestion(Resource):
+class RejectSuggestionResource(Resource):
     @authentication.login_required
-    @permission_required
-    def put(self, id_):
-        SuggestionManager.reject_upload(id_)
-        return status.HTTP_200_OK
+    @permission_required(UserType.admin)
+    def put(self, id):
+        SuggestionManager.reject_upload(id)
+        return status.HTTP_204_NO_CONTENT

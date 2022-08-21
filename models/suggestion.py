@@ -5,6 +5,7 @@ from models.enums import State
 
 
 class SuggestionModel(db.Model):
+
     __tablename__ = "suggestion"
 
     # Here also we will use 'pk' instead of 'id'
