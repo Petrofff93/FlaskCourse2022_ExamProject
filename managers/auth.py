@@ -12,6 +12,7 @@ class AuthManager:
     """
     Authentication manager which is responsible to encode/decode and validate tokens
     """
+
     @staticmethod
     def encode_token(user):
         payload = {
@@ -42,9 +43,9 @@ def verify_token(token):
     """
     try:
         user_id = AuthManager.decode_token(token)
-        if user_id[1] == 'SuggesterModel':
+        if user_id[1] == "SuggesterModel":
             return SuggesterModel.query.filter_by(id=user_id[0]).first()
-        if user_id[1] == 'AdministratorModel':
+        if user_id[1] == "AdministratorModel":
             return AdministratorModel.query.filter_by(id=user_id[0]).first()
     except Exception:
         raise Unauthorized("Token is invalid or missing!")

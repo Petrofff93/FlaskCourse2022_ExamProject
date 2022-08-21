@@ -9,4 +9,3 @@ def decode_photo(path, encoded_string):
             f.write(base64.b64decode(encoded_string.encode("utf-8")))
         except Exception as err:
             raise BadRequest("Invalid certificate encoding")
-        

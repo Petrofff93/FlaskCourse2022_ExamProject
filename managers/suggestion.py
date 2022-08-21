@@ -1,15 +1,19 @@
 import os
 import uuid
 
+from decouple import config
+
 from constants import TEMP_FILE_DIR
 from db import db
 from models import SuggesterModel, State
 
 from models.suggestion import SuggestionModel
 from services.s3 import S3Service
+from services.ses import SESService
 from utils.helpers import decode_photo
 
 s3 = S3Service()
+email_service = SESService()
 
 
 class SuggestionManager:
@@ -52,7 +56,17 @@ class SuggestionManager:
     @staticmethod
     def upload_suggestion(id_):
         SuggestionModel.query.filter_by(id=id_).update({"status": State.accepted})
+        email_service.send_mail(
+            "Uploaded post",
+            [config("AWS_RECIPIENT")],
+            "Greetings!\nYour post is uploaded. Thanks for helping us improve!\n Stay safe!",
+        )
 
     @staticmethod
     def reject_upload(id_):
         SuggestionModel.query.filter_by(id=id_).update({"status": State.rejected})
+        email_service.send_mail(
+            "Rejected post",
+            [config("AWS_RECIPIENT")],
+            "Greetings!\nWe are sorry to inform you that due to violations your post was rejected.\n Stay safe!",
+        )

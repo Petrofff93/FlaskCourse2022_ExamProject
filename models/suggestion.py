@@ -11,6 +11,7 @@ class SuggestionModel(db.Model):
     they should add title, content of the suggestion, they should rate the university,
     and a mandatory rule is that they upload at least one certificate to prove that they are students.
     """
+
     __tablename__ = "suggestion"
 
     id = db.Column(db.Integer, primary_key=True)

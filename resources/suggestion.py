@@ -39,6 +39,7 @@ class SuggestionListGetAllResource(Resource):
     Resource class which is responsible for retrieving all the approved (accepted by admins) data
     and made it visible for anyone who wants to check (admins, base users, non registered)
     """
+
     def get(self):
         suggestions = SuggestionManager.get_all_suggestions()
         return SuggestionResponseSchema().dump(suggestions, many=True)
@@ -48,6 +49,7 @@ class UploadSuggestionResource(Resource):
     """
     Resource class which gives the admins the option to check and upload(approve) the pending suggestion.
     """
+
     @authentication.login_required
     @permission_required(UserType.admin)
     def put(self, id):
@@ -59,6 +61,7 @@ class RejectSuggestionResource(Resource):
     """
     Resource class which gives the admins the option to check and download/delete (reject) the pending suggestion.
     """
+
     @authentication.login_required
     @permission_required(UserType.admin)
     def put(self, id):

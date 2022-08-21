@@ -10,4 +10,3 @@ class SuggestionResponseSchema(BaseSuggestionSchema):
     status = EnumField(State, by_value=True)
     created_on = fields.DateTime(required=True)
     course_certificate_url = fields.URL(required=True)
-

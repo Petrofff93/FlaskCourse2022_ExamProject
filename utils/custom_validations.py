@@ -7,12 +7,7 @@ from phonenumbers import NumberParseException
 
 from models import SuggesterModel, AdministratorModel
 
-policy = PasswordPolicy.from_names(
-    uppercase=1,
-    numbers=1,
-    special=1,
-    nonletters=1
-)
+policy = PasswordPolicy.from_names(uppercase=1, numbers=1, special=1, nonletters=1)
 
 
 # Custom validation for the password using external library 'password_strength'
@@ -42,7 +37,11 @@ def validate_email_already_exists(email):
 
 # Custom validation for already used phone numbers(you should not use one number for more than one reg)
 def validate_phone_number_already_exists(phone_number):
-    current_phone_number_suggester = SuggesterModel.query.filter_by(phone_number=phone_number).first()
-    current_phone_number_admin = AdministratorModel.query.filter_by(phone_number=phone_number).first()
+    current_phone_number_suggester = SuggesterModel.query.filter_by(
+        phone_number=phone_number
+    ).first()
+    current_phone_number_admin = AdministratorModel.query.filter_by(
+        phone_number=phone_number
+    ).first()
     if current_phone_number_admin or current_phone_number_suggester:
         raise ValidationError("User with that phone number already exists!")
