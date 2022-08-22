@@ -3,6 +3,10 @@ from decouple import config
 
 
 class SESService:
+    """
+    An amazon SES integration. The class is responsible for sending mails when needed and invoked.
+    """
+
     def __init__(self):
         self.ses = boto3.client(
             "ses",

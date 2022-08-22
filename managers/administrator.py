@@ -1,5 +1,5 @@
 from werkzeug.exceptions import BadRequest
-from werkzeug.security import check_password_hash
+
 
 from managers.auth import AuthManager
 from models import AdministratorModel

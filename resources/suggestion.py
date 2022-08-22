@@ -31,7 +31,7 @@ class SuggestionListCreateResource(Resource):
         suggester = authentication.current_user()
         data = request.get_json()
         suggestion = SuggestionManager.create(data, suggester.id)
-        return SuggestionResponseSchema().dump(suggestion)
+        return SuggestionResponseSchema().dump(suggestion), status.HTTP_201_CREATED
 
 
 class SuggestionListGetAllResource(Resource):
@@ -67,3 +67,11 @@ class RejectSuggestionResource(Resource):
     def put(self, id):
         SuggestionManager.reject_upload(id)
         return status.HTTP_204_NO_CONTENT
+
+
+class DeleteRejectedSuggestionsResource(Resource):
+    @authentication.login_required
+    @permission_required(UserType.admin)
+    def delete(self):
+        SuggestionManager.delete_rejected()
+        return {"Message": "All rejected suggestions are deleted."}

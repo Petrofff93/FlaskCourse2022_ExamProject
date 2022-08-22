@@ -8,6 +8,7 @@ from resources.suggestion import (
     UploadSuggestionResource,
     RejectSuggestionResource,
     SuggestionListGetAllResource,
+    DeleteRejectedSuggestionsResource,
 )
 
 routes = (
@@ -18,4 +19,5 @@ routes = (
     (SuggestionListGetAllResource, "/users_suggestions/"),
     (UploadSuggestionResource, "/admins/suggestions/<int:id>/upload/"),
     (RejectSuggestionResource, "/admins/suggestions/<int:id>/reject/"),
+    (DeleteRejectedSuggestionsResource, "/admins/suggestions/rejected/delete/"),
 )

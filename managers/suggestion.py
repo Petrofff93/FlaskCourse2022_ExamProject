@@ -70,3 +70,9 @@ class SuggestionManager:
             [config("AWS_RECIPIENT")],
             "Greetings!\nWe are sorry to inform you that due to violations your post was rejected.\n Stay safe!",
         )
+
+    @staticmethod
+    def delete_rejected():
+        deleted = SuggestionModel.query.filter_by(status=State.rejected).delete(
+            synchronize_session=False
+        )
