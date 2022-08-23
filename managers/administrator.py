@@ -1,6 +1,5 @@
 from werkzeug.exceptions import BadRequest
 
-
 from managers.auth import AuthManager
 from models import AdministratorModel
 

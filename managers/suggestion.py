@@ -6,7 +6,6 @@ from decouple import config
 from constants import TEMP_FILE_DIR
 from db import db
 from models import SuggesterModel, State
-
 from models.suggestion import SuggestionModel
 from services.s3 import S3Service
 from services.ses import SESService
@@ -40,7 +39,8 @@ class SuggestionManager:
         data["suggester_id"] = suggester_id
         extension = data.pop("certificate_extension")
         certificate = data.pop("certificate")
-        file_name = f"{str(uuid.uuid4())}.{extension}"
+        # In order to track user uploads in bucket, we add user id for each certificate.
+        file_name = f"{str(uuid.uuid4())}userid{suggester_id}.{extension}"
         path = os.path.join(TEMP_FILE_DIR, file_name)
         decode_photo(path, certificate)
         url = s3.upload_cert(path, file_name, extension)
