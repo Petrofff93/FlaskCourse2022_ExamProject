@@ -1,15 +1,12 @@
 import json
-import os
 from unittest.mock import patch
 
 from flask_testing import TestCase
 
-from constants import TEMP_FILE_DIR
-from db import db
 from config import create_app
+from db import db
 from models import SuggestionModel
 from services.s3 import S3Service
-from tests.base import mock_uuid
 from tests.factories import SuggesterFactory
 from tests.helpers import generate_token, encoded_certificate
 

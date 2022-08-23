@@ -1,14 +1,15 @@
-import json
-from unittest.mock import patch
-
-import werkzeug
 from flask_testing import TestCase
-from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.security import generate_password_hash
 
 from config import create_app
 from db import db
 from models import SuggesterModel
-from tests.factories import SuggesterFactory, SuggesterEmailFactory, SuggesterPhoneFactory, SuggesterFactoryLoginUser
+from tests.factories import (
+    SuggesterFactory,
+    SuggesterEmailFactory,
+    SuggesterPhoneFactory,
+    SuggesterFactoryLoginUser,
+)
 from tests.helpers import generate_token
 
 
@@ -105,7 +106,9 @@ class TestApp(TestCase):
         # Missing first_name
         resp = self.client.post(url, headers=headers, json=data)
         self.assert400(resp)
-        expected = {'message': "Invalid fields {'first_name': ['Missing data for required field.']}"}
+        expected = {
+            "message": "Invalid fields {'first_name': ['Missing data for required field.']}"
+        }
         actual = resp.json
         self.assertEqual(expected, actual)
 
@@ -113,7 +116,9 @@ class TestApp(TestCase):
         data["first_name"] = "T"
         resp = self.client.post(url, headers=headers, json=data)
         self.assert400(resp)
-        expected = {'message': "Invalid fields {'first_name': ['Length must be between 2 and 30.']}"}
+        expected = {
+            "message": "Invalid fields {'first_name': ['Length must be between 2 and 30.']}"
+        }
 
         actual = resp.json
         self.assertEqual(expected, actual)
@@ -122,7 +127,9 @@ class TestApp(TestCase):
         data["first_name"] = "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT"
         resp = self.client.post(url, headers=headers, json=data)
         self.assert400(resp)
-        expected = {'message': "Invalid fields {'first_name': ['Length must be between 2 and 30.']}"}
+        expected = {
+            "message": "Invalid fields {'first_name': ['Length must be between 2 and 30.']}"
+        }
         actual = resp.json
         self.assertEqual(expected, actual)
 
@@ -139,7 +146,9 @@ class TestApp(TestCase):
         # Missing first_name
         resp = self.client.post(url, headers=headers, json=data)
         self.assert400(resp)
-        expected = {'message': "Invalid fields {'last_name': ['Missing data for required field.']}"}
+        expected = {
+            "message": "Invalid fields {'last_name': ['Missing data for required field.']}"
+        }
         actual = resp.json
         self.assertEqual(expected, actual)
 
@@ -147,7 +156,9 @@ class TestApp(TestCase):
         data["last_name"] = "T"
         resp = self.client.post(url, headers=headers, json=data)
         self.assert400(resp)
-        expected = {'message': "Invalid fields {'last_name': ['Length must be between 2 and 30.']}"}
+        expected = {
+            "message": "Invalid fields {'last_name': ['Length must be between 2 and 30.']}"
+        }
 
         actual = resp.json
         self.assertEqual(expected, actual)
@@ -156,7 +167,9 @@ class TestApp(TestCase):
         data["last_name"] = "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT"
         resp = self.client.post(url, headers=headers, json=data)
         self.assert400(resp)
-        expected = {'message': "Invalid fields {'last_name': ['Length must be between 2 and 30.']}"}
+        expected = {
+            "message": "Invalid fields {'last_name': ['Length must be between 2 and 30.']}"
+        }
         actual = resp.json
         self.assertEqual(expected, actual)
 
@@ -176,7 +189,9 @@ class TestApp(TestCase):
         # Missing email address
         resp = self.client.post(url, headers=headers, json=data)
         self.assert400(resp)
-        expected = {'message': "Invalid fields {'email': ['Missing data for required field.']}"}
+        expected = {
+            "message": "Invalid fields {'email': ['Missing data for required field.']}"
+        }
         actual = resp.json
         self.assertEqual(expected, actual)
 
@@ -184,7 +199,9 @@ class TestApp(TestCase):
         data["email"] = "t.t@.t"
         resp = self.client.post(url, headers=headers, json=data)
         self.assert400(resp)
-        expected = {'message': "Invalid fields {'email': ['Not a valid email address.']}"}
+        expected = {
+            "message": "Invalid fields {'email': ['Not a valid email address.']}"
+        }
         actual = resp.json
         self.assertEqual(expected, actual)
 
@@ -195,7 +212,10 @@ class TestApp(TestCase):
         url = "/register/"
         user = SuggesterEmailFactory()
         token = generate_token(user)
-        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {token}"}
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {token}",
+        }
 
         data = {
             "first_name": "Testov",
@@ -206,7 +226,7 @@ class TestApp(TestCase):
         }
         resp = self.client.post(url, headers=headers, json=data)
         self.assert400(resp)
-        expected = {'message': "Invalid fields {'email': ['Email already exists!']}"}
+        expected = {"message": "Invalid fields {'email': ['Email already exists!']}"}
         actual = resp.json
         self.assertEqual(expected, actual)
 
@@ -224,7 +244,9 @@ class TestApp(TestCase):
         }
         resp = self.client.post(url, headers=headers, json=data)
         self.assert400(resp)
-        expected = {'message': "Invalid fields {'phone_number': ['Missing data for required field.']}"}
+        expected = {
+            "message": "Invalid fields {'phone_number': ['Missing data for required field.']}"
+        }
         actual = resp.json
         self.assertEqual(expected, actual)
 
@@ -235,7 +257,10 @@ class TestApp(TestCase):
         url = "/register/"
         user = SuggesterPhoneFactory()
         token = generate_token(user)
-        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {token}"}
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {token}",
+        }
 
         data = {
             "first_name": "Testov",
@@ -246,7 +271,9 @@ class TestApp(TestCase):
         }
         resp = self.client.post(url, headers=headers, json=data)
         self.assert400(resp)
-        expected = {'message': "Invalid fields {'phone_number': ['User with that phone number already exists!']}"}
+        expected = {
+            "message": "Invalid fields {'phone_number': ['User with that phone number already exists!']}"
+        }
         actual = resp.json
         self.assertEqual(expected, actual)
 
@@ -275,26 +302,20 @@ class TestApp(TestCase):
 
         sugg = SuggesterFactoryLoginUser()
 
-        data = {
-            "email": "test@test.com",
-            "password": "231245EP@"
-        }
+        data = {"email": "test@test.com", "password": "231245EP@"}
         # Test with false password
         resp = self.client.post(url, headers=headers, json=data)
         self.assert400(resp)
-        expected = {'message': 'Credentials are not valid!'}
+        expected = {"message": "Credentials are not valid!"}
         actual = resp.json
         self.assertEqual(expected, actual)
 
         # Test with false email
-        data = {
-            "email": "test@testfalse.com",
-            "password": "231245EP@"
-        }
+        data = {"email": "test@testfalse.com", "password": "231245EP@"}
         # Test with false password
         resp = self.client.post(url, headers=headers, json=data)
         self.assert400(resp)
-        expected = {'message': 'There is no such email! Please Signup'}
+        expected = {"message": "There is no such email! Please Signup"}
         actual = resp.json
         self.assertEqual(expected, actual)
 
@@ -304,10 +325,7 @@ class TestApp(TestCase):
 
         user = SuggesterFactory()
 
-        data = {
-            "email": user.email,
-            "password": user.password
-        }
+        data = {"email": user.email, "password": user.password}
         user.password = generate_password_hash(user.password)
         resp = self.client.post(url, headers=headers, json=data)
         self.assert200(resp)
