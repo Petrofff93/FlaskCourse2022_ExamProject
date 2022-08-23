@@ -24,13 +24,12 @@ class AuthManager:
 
     @staticmethod
     def decode_token(token):
-        try:
-            payload = jwt.decode(
-                token, key=config("JWT_SECRET_KEY"), algorithms=["HS256"]
-            )
-            return payload["sub"], payload["type"]
-        except Exception as error:
-            raise error
+        payload = jwt.decode(
+            token, key=config("JWT_SECRET_KEY"), algorithms=["HS256"]
+        )
+        return payload["sub"], payload["type"]
+    # except Exception as error:
+    #     raise error
 
 
 authentication = HTTPTokenAuth(scheme="Bearer")
@@ -41,6 +40,8 @@ def verify_token(token):
     """
     a verification func which takes care to verify if the user is regular or admin or does not exist
     """
+    if not token:
+        raise Unauthorized("Token is missing!")
     try:
         user_id = AuthManager.decode_token(token)
         if user_id[1] == "SuggesterModel":
@@ -48,4 +49,4 @@ def verify_token(token):
         if user_id[1] == "AdministratorModel":
             return AdministratorModel.query.filter_by(id=user_id[0]).first()
     except Exception:
-        raise Unauthorized("Token is invalid or missing!")
+        raise Unauthorized("Token is invalid!")

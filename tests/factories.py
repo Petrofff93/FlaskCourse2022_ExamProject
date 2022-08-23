@@ -26,3 +26,4 @@ class SuggesterFactory(BaseFactory):
     email = factory.Faker("email")
     password = factory.Faker("password")
     phone_number = f"+359{str(randint(100000, 200000))}"
+    role = UserType.base_user
