@@ -24,10 +24,9 @@ class AuthManager:
 
     @staticmethod
     def decode_token(token):
-        payload = jwt.decode(
-            token, key=config("JWT_SECRET_KEY"), algorithms=["HS256"]
-        )
+        payload = jwt.decode(token, key=config("JWT_SECRET_KEY"), algorithms=["HS256"])
         return payload["sub"], payload["type"]
+
     # except Exception as error:
     #     raise error
 
