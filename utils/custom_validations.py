@@ -1,7 +1,6 @@
 import phonenumbers
 from marshmallow import ValidationError
 from password_strength import PasswordPolicy
-
 # The additional validation for strong password used in Schemas
 from phonenumbers import NumberParseException
 

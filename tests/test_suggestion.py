@@ -7,7 +7,13 @@ from config import create_app
 from db import db
 from models import SuggestionModel
 from services.s3 import S3Service
-from tests.factories import SuggesterFactory
+from services.ses import SESService
+from tests.factories import (
+    SuggesterFactory,
+    AdminFactory,
+    SuggestionFactory,
+    SuggesterUploadFactory,
+)
 from tests.helpers import generate_token, encoded_certificate
 
 
@@ -92,3 +98,39 @@ class TestSuggestion(TestCase):
 
         suggestions = SuggestionModel.query.all()
         self.assertEqual(len(suggestions), 1)
+
+    @patch.object(SESService, "send_mail", return_value=None)
+    def test_upload_suggestion(self, mocked_ses):
+        suggester = SuggesterUploadFactory()
+        suggestion = SuggestionFactory()
+        admin = AdminFactory()
+        upload_url = f"/admins/suggestions/{suggestion.id}/upload/"
+        token = generate_token(admin)
+        headers = {"Authorization": f"Bearer {token}"}
+
+        suggestions = SuggestionModel.query.all()
+        self.assertEqual(len(suggestions), 1)
+
+        resp = self.client.put(upload_url, headers=headers)
+        assert resp.status_code == 200
+
+        result = SuggestionModel.query.filter_by(status="accepted").all()
+        self.assertEqual(len(result), 1)
+
+    @patch.object(SESService, "send_mail", return_value=None)
+    def test_reject_suggestion(self, mocked_ses):
+        suggester = SuggesterUploadFactory()
+        suggestion = SuggestionFactory()
+        admin = AdminFactory()
+        upload_url = f"/admins/suggestions/{suggestion.id}/reject/"
+        token = generate_token(admin)
+        headers = {"Authorization": f"Bearer {token}"}
+
+        suggestions = SuggestionModel.query.all()
+        self.assertEqual(len(suggestions), 1)
+
+        resp = self.client.put(upload_url, headers=headers)
+        assert resp.status_code == 200
+
+        result = SuggestionModel.query.filter_by(status="rejected").all()
+        self.assertEqual(len(result), 1)

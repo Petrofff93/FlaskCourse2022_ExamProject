@@ -6,6 +6,7 @@ class BaseUserModel(db.Model):
     """
     An abstract model used to be inherited and serve as base model for any type of users which we want.
     """
+
     __abstract__ = True
 
     id = db.Column(db.Integer, primary_key=True)

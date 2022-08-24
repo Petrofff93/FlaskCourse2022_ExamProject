@@ -3,8 +3,9 @@ from random import randint
 import factory
 
 from db import db
-from models.enums import UserType
-from models.user import SuggesterModel
+from models import SuggestionModel
+from models.enums import UserType, State
+from models.user import SuggesterModel, AdministratorModel
 
 
 class BaseFactory(factory.Factory):
@@ -57,3 +58,28 @@ class SuggesterFactoryLoginUser(SuggesterFactory):
     password = "Password123!"
     phone_number = "+359876870777"
     role = UserType.base_user
+
+
+class SuggestionFactory(BaseFactory):
+    class Meta:
+        model = SuggestionModel
+
+    title = factory.Faker("first_name")
+    content = factory.Faker("last_name")
+    assessment_rate = str(randint(1, 10))
+    status = State.pending
+    course_certificate_url = "some.s3.random.url"
+    suggester_id = 1
+
+
+class AdminFactory(SuggesterFactory):
+    class Meta:
+        model = AdministratorModel
+
+    id = 2
+    role = UserType.admin
+    phone_number = "+359876870777"
+
+
+class SuggesterUploadFactory(SuggesterFactory):
+    id = 1
