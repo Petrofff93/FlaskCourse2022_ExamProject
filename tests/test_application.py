@@ -306,7 +306,7 @@ class TestApp(TestCase):
         # Test with false password
         resp = self.client.post(url, headers=headers, json=data)
         self.assert400(resp)
-        expected = {"message": "Credentials are not valid!"}
+        expected = {"message": "Incorrect password!"}
         actual = resp.json
         self.assertEqual(expected, actual)
 

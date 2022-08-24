@@ -1,5 +1,7 @@
 import boto3
+from botocore.exceptions import ClientError
 from decouple import config
+from werkzeug.exceptions import InternalServerError
 
 
 class SESService:
@@ -32,5 +34,5 @@ class SESService:
                     "Body": body,
                 },
             )
-        except Exception as err:
-            raise err
+        except ClientError:
+            raise InternalServerError("Email service is currently unavailable")

@@ -33,4 +33,4 @@ class SuggesterManager:
 
         if check_password_hash(suggester.password, signin_data["password"]):
             return AuthManager.encode_token(suggester)
-        raise BadRequest("Credentials are not valid!")
+        raise BadRequest("Incorrect password!")

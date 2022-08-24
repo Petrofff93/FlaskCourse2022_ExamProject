@@ -29,4 +29,5 @@ class RequestRegisterUserSchema(BaseUserSchema):
 
 
 class RequestLoginUserSchema(BaseUserSchema):
+    # email fields is overridden in order to prevent the 'mail already exists' exception
     email = fields.Email(required=True)

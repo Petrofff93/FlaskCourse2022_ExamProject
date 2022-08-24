@@ -36,6 +36,7 @@ class SuggestionManager:
 
     @staticmethod
     def create(data, suggester_id):
+        # A method which is responsible for storing the suggestion and uploading the certificates to AWS cloud.
         data["suggester_id"] = suggester_id
         extension = data.pop("certificate_extension")
         certificate = data.pop("certificate")
@@ -55,6 +56,7 @@ class SuggestionManager:
 
     @staticmethod
     def upload_suggestion(id_):
+        # Method which accepts the user's suggestion and sending them a confirmation email
         SuggestionModel.query.filter_by(id=id_).update({"status": State.accepted})
         email_service.send_mail(
             "Uploaded post",
@@ -64,6 +66,7 @@ class SuggestionManager:
 
     @staticmethod
     def reject_upload(id_):
+        # After admin check, this method rejects the user's upload and also notifies the user via email service.
         SuggestionModel.query.filter_by(id=id_).update({"status": State.rejected})
         email_service.send_mail(
             "Rejected post",
@@ -73,6 +76,7 @@ class SuggestionManager:
 
     @staticmethod
     def delete_rejected():
-        deleted = SuggestionModel.query.filter_by(status=State.rejected).delete(
+        # A method used only by admins in order to delete rejected posts from db over time.
+        SuggestionModel.query.filter_by(status=State.rejected).delete(
             synchronize_session=False
         )
