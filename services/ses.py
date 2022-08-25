@@ -1,3 +1,5 @@
+import time
+
 import boto3
 from botocore.exceptions import ClientError
 from decouple import config
@@ -22,6 +24,7 @@ class SESService:
         body.update({"Text": {"Data": data_text, "Charset": "UTF-8"}})
 
         try:
+            time.sleep(5)
             self.ses.send_email(
                 Source=config("AWS_SOURCE_MAIL"),
                 Destination={

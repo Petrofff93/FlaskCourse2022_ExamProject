@@ -57,21 +57,23 @@ class SuggestionManager:
     @staticmethod
     def upload_suggestion(id_):
         # Method which accepts the user's suggestion and sending them a confirmation email
+        body = "Greetings!\nYour post is uploaded. Thanks for helping us improve!\n Stay safe!"
         SuggestionModel.query.filter_by(id=id_).update({"status": State.accepted})
         email_service.send_mail(
             "Uploaded post",
             [config("AWS_RECIPIENT")],
-            "Greetings!\nYour post is uploaded. Thanks for helping us improve!\n Stay safe!",
+            body
         )
 
     @staticmethod
     def reject_upload(id_):
         # After admin check, this method rejects the user's upload and also notifies the user via email service.
+        body = "Greetings!\nWe are sorry to inform you that due to violations your post was rejected.\n Stay safe!"
         SuggestionModel.query.filter_by(id=id_).update({"status": State.rejected})
         email_service.send_mail(
             "Rejected post",
             [config("AWS_RECIPIENT")],
-            "Greetings!\nWe are sorry to inform you that due to violations your post was rejected.\n Stay safe!",
+            body
         )
 
     @staticmethod
