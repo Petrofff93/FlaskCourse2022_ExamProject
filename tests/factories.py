@@ -31,33 +31,16 @@ class SuggesterFactory(BaseFactory):
 
 
 class SuggesterEmailFactory(SuggesterFactory):
-    id = factory.Sequence(lambda x: x)
-    first_name = factory.Faker("first_name")
-    last_name = factory.Faker("last_name")
     email = "test@test.com"
-    password = factory.Faker("password")
-    phone_number = f"+359{str(randint(1000000, 2000000))}"
-    role = UserType.base_user
 
 
 class SuggesterPhoneFactory(SuggesterFactory):
-    id = factory.Sequence(lambda x: x)
-    first_name = factory.Faker("first_name")
-    last_name = factory.Faker("last_name")
-    email = factory.Faker("email")
-    password = factory.Faker("password")
     phone_number = "+359876870777"
-    role = UserType.base_user
 
 
 class SuggesterFactoryLoginUser(SuggesterFactory):
-    id = factory.Sequence(lambda x: x)
-    first_name = factory.Faker("first_name")
-    last_name = factory.Faker("last_name")
     email = "test@test.com"
     password = "Password123!"
-    phone_number = "+359876870777"
-    role = UserType.base_user
 
 
 class SuggestionFactory(BaseFactory):
@@ -83,3 +66,7 @@ class AdminFactory(SuggesterFactory):
 
 class SuggesterUploadFactory(SuggesterFactory):
     id = 1
+
+
+class AcceptedSuggestionFactory(SuggestionFactory):
+    status = State.accepted

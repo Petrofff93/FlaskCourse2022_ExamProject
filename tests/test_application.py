@@ -297,7 +297,7 @@ class TestApp(TestCase):
         self.assertEqual(len(users), 1)
 
     def test_user_login_raises_when_invalid_credentials(self):
-        url = "/login/base_user/"
+        url = "/login/user/"
         headers = {"Content-Type": "application/json"}
 
         sugg = SuggesterFactoryLoginUser()
@@ -320,7 +320,7 @@ class TestApp(TestCase):
         self.assertEqual(expected, actual)
 
     def test_user_login_successfully(self):
-        url = "/login/base_user/"
+        url = "/login/user/"
         headers = {"Content-Type": "application/json"}
 
         user = SuggesterFactory()

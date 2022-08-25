@@ -13,6 +13,7 @@ from tests.factories import (
     AdminFactory,
     SuggestionFactory,
     SuggesterUploadFactory,
+    AcceptedSuggestionFactory,
 )
 from tests.helpers import generate_token, encoded_certificate
 
@@ -99,9 +100,52 @@ class TestSuggestion(TestCase):
         suggestions = SuggestionModel.query.all()
         self.assertEqual(len(suggestions), 1)
 
-    @patch.object(SESService, "send_mail", return_value=None)
-    def test_upload_suggestion(self, mocked_ses):
+    def test_get_user_suggestion(self):
         suggester = SuggesterUploadFactory()
+        suggestion = SuggestionFactory()
+        token = generate_token(suggester)
+        headers = {"Authorization": f"Bearer {token}"}
+
+        suggestions = SuggestionModel.query.all()
+        self.assertEqual(len(suggestions), 1)
+
+        resp = self.client.get(self.url, headers=headers)
+        assert resp.status_code == 200
+        data = resp.json
+        del data[0]["created_on"]
+
+        expected_message = [
+            {
+                "assessment_rate": int(f"{suggestion.assessment_rate}"),
+                "content": f"{suggestion.content}",
+                "course_certificate_url": "some.s3.random.url",
+                "id": int(f"{suggestion.id}"),
+                "status": "Waiting for an overview",
+                "title": f"{suggestion.title}",
+            }
+        ]
+
+        self.assertEqual(expected_message, data)
+
+    def test_get_all_accepted_suggestion_access_free(self):
+        all_suggestions_url = "/users/suggestions/"
+        SuggesterUploadFactory()
+        SuggestionFactory()
+        AcceptedSuggestionFactory()
+
+        suggestions = SuggestionModel.query.all()
+        self.assertEqual(len(suggestions), 2)
+
+        resp = self.client.get(
+            all_suggestions_url,
+        )
+        data = resp.json
+        assert resp.status_code == 200
+        self.assertEqual(len(data), 1)
+
+    @patch.object(SESService, "send_mail", return_value=None)
+    def test_upload_accept_suggestion(self, mocked_ses):
+        SuggesterUploadFactory()
         suggestion = SuggestionFactory()
         admin = AdminFactory()
         upload_url = f"/admins/suggestions/{suggestion.id}/upload/"
@@ -119,18 +163,41 @@ class TestSuggestion(TestCase):
 
     @patch.object(SESService, "send_mail", return_value=None)
     def test_reject_suggestion(self, mocked_ses):
-        suggester = SuggesterUploadFactory()
+        SuggesterUploadFactory()
         suggestion = SuggestionFactory()
         admin = AdminFactory()
-        upload_url = f"/admins/suggestions/{suggestion.id}/reject/"
+        reject_url = f"/admins/suggestions/{suggestion.id}/reject/"
         token = generate_token(admin)
         headers = {"Authorization": f"Bearer {token}"}
 
         suggestions = SuggestionModel.query.all()
         self.assertEqual(len(suggestions), 1)
 
-        resp = self.client.put(upload_url, headers=headers)
+        resp = self.client.put(reject_url, headers=headers)
         assert resp.status_code == 200
 
         result = SuggestionModel.query.filter_by(status="rejected").all()
         self.assertEqual(len(result), 1)
+
+    def test_delete_all_rejected_suggestions(self):
+        delete_url = "/admins/suggestions/rejected/delete/"
+
+        SuggesterUploadFactory()
+        suggestion = SuggestionFactory()
+        admin = AdminFactory()
+        token = generate_token(admin)
+        headers = {"Authorization": f"Bearer {token}"}
+        reject_url = f"/admins/suggestions/{suggestion.id}/reject/"
+
+        suggestions = SuggestionModel.query.all()
+        self.assertEqual(len(suggestions), 1)
+        resp = self.client.put(reject_url, headers=headers)
+        assert resp.status_code == 200
+
+        delete_resp = self.client.delete(delete_url, headers=headers)
+        sugg_after_delete = SuggestionModel.query.all()
+        self.assertEqual(len(sugg_after_delete), 0)
+
+        expected_message = {"Message": "All rejected suggestions are deleted."}
+        actual = delete_resp.json
+        self.assertEqual(expected_message, actual)

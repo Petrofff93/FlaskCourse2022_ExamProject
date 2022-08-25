@@ -13,10 +13,10 @@ from resources.suggestion import (
 
 routes = (
     (RegisterSuggesterResource, "/register/"),
-    (LoginSuggesterResource, "/login/base_user/"),
+    (LoginSuggesterResource, "/login/user/"),
     (LoginAdministratorResource, "/login/admin/"),
     (SuggestionListCreateResource, "/suggesters/suggestions/"),
-    (SuggestionListGetAllResource, "/users_suggestions/"),
+    (SuggestionListGetAllResource, "/users/suggestions/"),
     (UploadSuggestionResource, "/admins/suggestions/<int:id>/upload/"),
     (RejectSuggestionResource, "/admins/suggestions/<int:id>/reject/"),
     (DeleteRejectedSuggestionsResource, "/admins/suggestions/rejected/delete/"),
